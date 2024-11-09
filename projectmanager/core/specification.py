@@ -29,19 +29,12 @@ def add_path_group(spec_data: dict, name: str, dir_path: str, extensions: list[s
     spec_data["pathGroups"].append({"name": name, "dirPath": dir_path, "extensions": extensions})
 
 
-def objectives_to_str(spec_data: dict, sep: str = "\n") -> str:
-    return sep.join(
-            objective["name"] if objective["description"] == "" else
-            (objective["name"] + ": " + objective["description"])
-            for objective in spec_data.get("objectives", [])
-            )
+def objective_to_str(objective: dict) -> str:
+    return objective["name"] if objective["description"] == "" else f"{objective['name']}: {objective['description']}"
 
 
-def path_groups_to_str(spec_data: dict, sep: str = "\n") -> str:
-    return sep.join(
-            f"{path_group['name']}: {path_group['dirPath']} [{','.join(path_group['extensions'])}]"
-            for path_group in spec_data.get("pathGroups", [])
-            )
+def path_group_to_str(path_group: dict) -> str:
+    return f"{path_group['name']}: {path_group['dirPath']} [{','.join(path_group['extensions'])}]"
 
 
 def remove_objective(spec_data: dict, name: str) -> None:

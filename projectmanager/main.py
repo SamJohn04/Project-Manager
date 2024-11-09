@@ -34,11 +34,7 @@ def init(args: list[str]):
 
 
 def add(args: list[str]):
-    try:
-        spec_data = io.read_specification()
-    except FileNotFoundError:
-        print("Specification has not yet been initialized. Please initialize the specification file with init.")
-        exit(1)
+    spec_data = io.read_specification()
 
     what_to_add = input("What would you like to add? (objective | path): ") if len(args) == 0 else args[0]
 
@@ -67,8 +63,44 @@ def add(args: list[str]):
 
 
 def view(args: list[str]):
-    # TODO
-    pass
+    spec_data = io.read_specification()
+
+    if len(args) == 0:
+        print(spec_data["title"])
+        print("Objectives")
+        for objective in spec_data.get("objectives", []):
+            print('\t', specification.objective_to_str(objective))
+        print("\nPath Groups")
+        for path_group in spec_data.get("pathGroups", []):
+            print('\t', specification.path_group_to_str(path_group))
+    elif args[0] == "objectives":
+        for objective in spec_data.get("objectives", []):
+            print(specification.objective_to_str(objective))
+    elif args[0] == "objective":
+        name_to_search = input("Please enter objective name to view: ") if len(args) == 1 else args[1]
+        objective_to_display = None
+        for objective in spec_data.get("objectives", []):
+            if objective["name"] == name_to_search:
+                objective_to_display = objective
+        if objective_to_display is None:
+            print("Objective not found.")
+        else:
+            print(specification.objective_to_str(objective_to_display))
+    elif args[0] == "paths":
+        for path_group in spec_data.get("pathGroups", []):
+            print(specification.path_group_to_str(path_group))
+    elif args[0] == "path":
+        name_to_search = input("Please enter path group name to view: ") if len(args) == 1 else args[1]
+        path_group_to_display = None
+        for path_group in spec_data.get("pathGroups", []):
+            if path_group["name"] == name_to_search:
+                path_group_to_display = path_group
+        if path_group_to_display is None:
+            print("Path Group not found.")
+        else:
+            print(specification.path_group_to_str(path_group_to_display))
+    else:
+        print("Invalid option. To view all objectives, use objectives; To view all paths use paths. To view an objective or a path, use 'objective' or 'path'")
 
 
 def remove(args: list[str]):
