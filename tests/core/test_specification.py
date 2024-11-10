@@ -52,10 +52,12 @@ def test_path_groups_to_str():
     spec = specification.init_spec("TITLE")
 
     specification.add_path_group(spec, "main", "src", ["py"])
+    specification.add_path_group(spec, "src", "src", ["py", "ts"])
     specification.add_path_group(spec, "tests", "tests", [])
 
     assert specification.path_group_to_str(spec["pathGroups"][0]) == "main: src [py]"
-    assert specification.path_group_to_str(spec["pathGroups"][1]) == "tests: tests []"
+    assert specification.path_group_to_str(spec["pathGroups"][1]) == "src: src [py, ts]"
+    assert specification.path_group_to_str(spec["pathGroups"][2]) == "tests: tests []"
 
 
 def test_remove_objective():

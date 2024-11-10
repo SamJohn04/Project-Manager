@@ -8,7 +8,7 @@ def main():
     args = sys.argv[1:]
     if len(args) == 0:
         display_info()
-        exit(0)
+        return
 
     match args[0]:
         case "init":
@@ -21,20 +21,21 @@ def main():
             remove(args[1:])
 
 
-def display_info():
-    # TODO
-    pass
-
-
 def init(args: list[str]):
+    if io.read_specification() is not None:
+        choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
+        if choice not in ("y", "Y"):
+            return
     title = input("Project title: ") if len(args) == 0 else ' '.join(args)
-
-    new_spec_data = specification.init_spec(title)
-    io.write_specification(new_spec_data)
+    io.write_specification(specification.init_spec(title))
 
 
 def add(args: list[str]):
     spec_data = io.read_specification()
+
+    if spec_data is None:
+        print("Specification not found. Please initialize the specification first.")
+        exit(1)
 
     what_to_add = input("What would you like to add? (objective | path): ") if len(args) == 0 else args[0]
 
@@ -64,6 +65,10 @@ def add(args: list[str]):
 
 def view(args: list[str]):
     spec_data = io.read_specification()
+
+    if spec_data is None:
+        display_info()
+        return
 
     if len(args) == 0:
         print(spec_data["title"])
@@ -104,8 +109,31 @@ def view(args: list[str]):
 
 
 def remove(args: list[str]):
-    # TODO
-    pass
+    spec_data = io.read_specification()
+
+    if spec_data is None:
+        print("Specification not found. Please init the specification first.")
+        exit(1)
+
+    what_to_remove = input("What would you like to remove ? (objective | path): ") if len(args) == 0 else args[0]
+    if what_to_remove not in ("objective", "path"):
+        print("Invalid option.")
+        exit(1)
+    name_to_remove = input(f"{what_to_remove} name: ") if len(args) < 2 else args[1]
+    if what_to_remove == "objective":
+        specification.remove_objective(spec_data, name_to_remove)
+    else:
+        specification.remove_path_group(spec_data, name_to_remove)
+
+    io.write_specification(spec_data)
+
+
+def display_info():
+    print("Project Manager\nA concise project management tool\n")
+    print("init\t\tInitialize a new project specification")
+    print("add\t\tAdd an objective or a path to the specification")
+    print("view\t\tView specification data")
+    print("rm\t\tRemove an objective or path by name")
 
 
 if __name__ == '__main__':

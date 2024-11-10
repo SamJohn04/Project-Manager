@@ -4,13 +4,16 @@ from pathlib import Path
 from projectmanager.config import PM_SPECIFICATION_FILE_NAME
 
 
-def read_specification() -> dict:
+def read_specification() -> dict | None:
     if not Path(PM_SPECIFICATION_FILE_NAME).is_file():
-        print("Specification has not yet been initialized. Please initialize the specification file with init.")
-        exit(1)
+        return None
 
-    with open(PM_SPECIFICATION_FILE_NAME, encoding='utf-8') as file:
-        json_data = json.load(file)
+    try:
+        with open(PM_SPECIFICATION_FILE_NAME, encoding='utf-8') as file:
+            json_data = json.load(file)
+    except Exception as e:
+        print("Something went wrong when parsing the specification file...", e)
+        exit(1)
 
     return json_data
 

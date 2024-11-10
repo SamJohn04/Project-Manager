@@ -30,11 +30,13 @@ def add_path_group(spec_data: dict, name: str, dir_path: str, extensions: list[s
 
 
 def objective_to_str(objective: dict) -> str:
-    return objective["name"] if objective["description"] == "" else f"{objective['name']}: {objective['description']}"
+    if objective["description"] == "":
+        return objective["name"]
+    return f"{objective['name']}: {objective['description']}"
 
 
 def path_group_to_str(path_group: dict) -> str:
-    return f"{path_group['name']}: {path_group['dirPath']} [{','.join(path_group['extensions'])}]"
+    return f"{path_group['name']}: {path_group['dirPath']} [{', '.join(path_group['extensions'])}]"
 
 
 def remove_objective(spec_data: dict, name: str) -> None:
