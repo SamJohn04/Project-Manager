@@ -1,6 +1,7 @@
+import json
 import sys
 
-from projectmanager.core import specification
+from projectmanager.core import specification, scan, template
 from projectmanager.util import io
 
 
@@ -13,12 +14,16 @@ def main():
     match args[0]:
         case "init":
             init(args[1:])
+        case "generate":
+            generate(args[1:])
         case "add":
             add(args[1:])
         case "view":
             view(args[1:])
         case "rm":
             remove(args[1:])
+        case "scan":
+            scan_command(args[1:])
 
 
 def init(args: list[str]):
@@ -28,6 +33,18 @@ def init(args: list[str]):
             return
     title = input("Project title: ") if len(args) == 0 else ' '.join(args)
     io.write_specification(specification.init_spec(title))
+
+
+def generate(args: list[str]):
+    if io.read_specification() is not None:
+        choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
+        if choice not in ("y", "Y"):
+            return
+    title = input("Project title: ") if len(args) == 0 else args[0]
+    template_path = input("Template path: ") if len(args) < 2 else args[1]
+
+    with open(template_path, encoding="utf-8") as file:
+        template.create_from_template(title, json.load(file))
 
 
 def add(args: list[str]):
@@ -128,12 +145,44 @@ def remove(args: list[str]):
     io.write_specification(spec_data)
 
 
+def scan_command(args: list[str]):
+    spec_data = io.read_specification()
+
+    if spec_data is None:
+        print("Specification not found. Please init the specification first.")
+        exit(1)
+
+    item_to_scan = None if len(args) == 0 else args[0]
+
+    if len(spec_data.get("pathGroups", [])) == 0:
+        print("No path groups found. Please add a path group to scan.")
+        exit(1)
+
+    for path_group in spec_data["pathGroups"]:
+        if item_to_scan is None or item_to_scan == "todos":
+            print(f"Scanning {path_group['name']} for todos...")
+            found_instances = scan.scan_path_group_for_todos(path_group)
+            for found_instance in found_instances:
+                if len(found_instance[1]) == 0:
+                    continue
+                print(found_instance[0], *found_instance[1], sep="\n\t")
+        if item_to_scan is None or item_to_scan == "objecitves":
+            print(f"Scanning {path_group['name']} for objectives...")
+            found_instances = scan.scan_path_group_for_objectives(path_group)
+            for found_instance in found_instances:
+                if len(found_instance[1]) == 0:
+                    continue
+                print(found_instance[0], *found_instance[1], sep="\n\t")
+
+
 def display_info():
     print("Project Manager\nA concise project management tool\n")
     print("init\t\tInitialize a new project specification")
+    print("generate\t\tGenerate a new project specification from a template")
     print("add\t\tAdd an objective or a path to the specification")
     print("view\t\tView specification data")
     print("rm\t\tRemove an objective or path by name")
+    print("scan\t\tScan path groups for todos and objective flags")
 
 
 if __name__ == '__main__':

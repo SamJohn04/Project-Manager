@@ -1,12 +1,17 @@
 from typing import Callable
+from projectmanager.config import DEFAULT_OBJECTIVE_FLAG, DEFAULT_TODO_FLAG
 from projectmanager.util import paths
 
 
-def scan_path_group_for_todos(path_group: dict, flag: str = "TODO"):
+def scan_path_group_for_todos(path_group: dict, flag: str | None = None):
+    if flag is None:
+        flag = DEFAULT_TODO_FLAG
     return scan_path_group(path_group, lambda content: scan_todos_from_content(content, flag))
 
 
-def scan_path_group_for_objectives(path_group: dict, flag: str = "@OBJECTIVE"):
+def scan_path_group_for_objectives(path_group: dict, flag: str | None = None):
+    if flag is None:
+        flag = DEFAULT_OBJECTIVE_FLAG
     return scan_path_group(path_group, lambda content: scan_objectives_from_content(content, flag))
 
 
@@ -24,7 +29,7 @@ def scan_path_group(path_group: dict, scan_method: Callable):
     return found_instances
 
 
-def scan_todos_from_content(content: str, flag: str = "TODO"):
+def scan_todos_from_content(content: str, flag: str):
     found_instances = []
 
     for index, line in enumerate(content.splitlines()):
@@ -34,7 +39,7 @@ def scan_todos_from_content(content: str, flag: str = "TODO"):
     return found_instances
 
 
-def scan_objectives_from_content(content: str, flag: str = "@OBJECTIVE"):
+def scan_objectives_from_content(content: str, flag: str):
     found_objectives = []
 
     for index, line in enumerate(content.splitlines()):
@@ -52,4 +57,23 @@ def scan_objectives_from_content(content: str, flag: str = "@OBJECTIVE"):
             found_objectives.append((index, parts[0], parts[1]))
 
     return found_objectives
+
+
+def display_todo_instance_by_file(todo_instance: tuple[str, list[int]]):
+    file_path, todos = todo_instance
+    if len(todos) == 0:
+        return
+
+    print(file_path)
+    with open(file_path, encoding="utf-8") as file:
+        lines = file.readlines()
+
+    assert len(lines) > max(todos)
+    for index in todos:
+        print(f"\t{index}")
+        if index > 0:
+            print(f"\t\t{lines[index-1]}")
+        print(f"\t\t{lines[index]}")
+        if index + 1 < len(lines):
+            print(f"\t\t{lines[index+1]}")
 
