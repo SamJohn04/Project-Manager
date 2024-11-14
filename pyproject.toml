@@ -9,10 +9,12 @@ description = "A tool to manage project information and track progress."
 authors = [{ name = "Samuel John", email = "samuel.john.codes@gmail.com" }]
 license = { text = "MIT" }
 
+[project.scripts]
+manager = "projectmanager.main:main"
 
 [project.optional-dependencies]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]
-where = ["project_manager"]
+where = ["projectmanager"]
 
