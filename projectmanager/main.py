@@ -31,7 +31,7 @@ def init(args: list[str]):
         choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
             return
-    title = input("Project title: ") if len(args) == 0 else ' '.join(args)
+    title = input("Project title: ") if len(args) < 1 else args[0]
     io.write_specification(specification.init_spec(title))
 
 
@@ -40,7 +40,7 @@ def generate(args: list[str]):
         choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
             return
-    title = input("Project title: ") if len(args) == 0 else args[0]
+    title = input("Project title: ") if len(args) < 1 else args[0]
     template_path = input("Template path: ") if len(args) < 2 else args[1]
 
     with open(template_path, encoding="utf-8") as file:
@@ -54,11 +54,11 @@ def add(args: list[str]):
         print("Specification not found. Please initialize the specification first.")
         exit(1)
 
-    what_to_add = input("What would you like to add? (objective | path): ") if len(args) == 0 else args[0]
+    what_to_add = input("What would you like to add? (objective | path): ") if len(args) < 1 else args[0]
 
     if what_to_add == "objective":
         objective_name = input("Objective name: ") if len(args) < 2 else args[1]
-        objective_description = input("Objective description: ") if len(args) < 3 else ' '.join(args[2:])
+        objective_description = input("Objective description: ") if len(args) < 3 else args[2]
         try:
             specification.add_objective(spec_data, objective_name, objective_description)
         except ValueError as e:
@@ -99,7 +99,7 @@ def view(args: list[str]):
         for objective in spec_data.get("objectives", []):
             print(specification.objective_to_str(objective))
     elif args[0] == "objective":
-        name_to_search = input("Please enter objective name to view: ") if len(args) == 1 else args[1]
+        name_to_search = input("Please enter objective name to view: ") if len(args) < 2 else args[1]
         objective_to_display = None
         for objective in spec_data.get("objectives", []):
             if objective["name"] == name_to_search:
@@ -112,7 +112,7 @@ def view(args: list[str]):
         for path_group in spec_data.get("pathGroups", []):
             print(specification.path_group_to_str(path_group))
     elif args[0] == "path":
-        name_to_search = input("Please enter path group name to view: ") if len(args) == 1 else args[1]
+        name_to_search = input("Please enter path group name to view: ") if len(args) < 2 else args[1]
         path_group_to_display = None
         for path_group in spec_data.get("pathGroups", []):
             if path_group["name"] == name_to_search:
@@ -132,7 +132,7 @@ def remove(args: list[str]):
         print("Specification not found. Please init the specification first.")
         exit(1)
 
-    what_to_remove = input("What would you like to remove ? (objective | path): ") if len(args) == 0 else args[0]
+    what_to_remove = input("What would you like to remove ? (objective | path): ") if len(args) < 1 else args[0]
     if what_to_remove not in ("objective", "path"):
         print("Invalid option.")
         exit(1)
@@ -152,7 +152,7 @@ def scan_command(args: list[str]):
         print("Specification not found. Please init the specification first.")
         exit(1)
 
-    item_to_scan = None if len(args) == 0 else args[0]
+    item_to_scan = None if len(args) < 1 else args[0]
 
     if len(spec_data.get("pathGroups", [])) == 0:
         print("No path groups found. Please add a path group to scan.")
