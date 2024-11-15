@@ -69,7 +69,7 @@ def test_scan_todos_from_content():
     assert scan.scan_todos_from_content(content, "TODO") == [5, 6]
     assert scan.scan_todos_from_content(content, flag="# TODO") == [5]
 
-    assert scan.scan_todos_from_content("Hello There!!\nHow are you?" "TODO") == []
+    assert scan.scan_todos_from_content("Hello There!!\nHow are you?", "TODO") == []
     assert scan.scan_todos_from_content("Hello There!!\nHow are you?", flag="are") == [1]
 
 
@@ -88,7 +88,7 @@ def test_scan_objectives_from_content():
     """
 
     with pytest.raises(ValueError):
-        scan.scan_objectives_from_content("@OBJECTIVE\ndef abc():\n\tprint()")
+        scan.scan_objectives_from_content("@OBJECTIVE\ndef abc():\n\tprint()", "@OBJECTIVE")
 
     assert scan.scan_objectives_from_content(content, "@OBJECTIVE") == [(1, "main", None), (7, "next", "todo")]
     assert scan.scan_objectives_from_content(content, flag="@FEAT") == [(3, "main", "done")]
