@@ -1,0 +1,25 @@
+{
+	"name": "name",
+	"pathGroups": [
+		{
+			"name": "main",
+			"dirPath": "src",
+			"extensions": ["py"]
+		}, {
+			"name": "test",
+			"dirPath": "tests",
+			"extensions": ["py"]
+		}
+	],
+	"toCreate": [
+		{
+			"path": "src/main.py",
+			"type": "file",
+			"content": "def main():\n\t# TODO\n\tpass\n"
+		},
+		{
+			"path": "tests",
+			"type": "dir"
+		}
+	]
+}

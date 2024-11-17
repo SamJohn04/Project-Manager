@@ -29,6 +29,19 @@ def add_path_group(spec_data: dict, name: str, dir_path: str, extensions: list[s
     spec_data["pathGroups"].append({"name": name, "dirPath": dir_path, "extensions": extensions})
 
 
+def set_option(spec_data: dict, option_name: str, option_val: str | None):
+    if "options" not in spec_data:
+        spec_data["options"] = {}
+    if option_val is None:
+        spec_data["options"] = {
+                option_key: spec_data["options"][option_key]
+                for option_key in spec_data
+                if option_key != option_name
+                }
+    else:
+        spec_data["options"][option_name] = option_val
+
+
 def objective_to_str(objective: dict) -> str:
     if objective["description"] == "":
         return objective["name"]

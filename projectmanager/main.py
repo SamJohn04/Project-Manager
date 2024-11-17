@@ -1,188 +1,188 @@
 import json
-import sys
 
+from projectmanager.arg_parse import parse_args
 from projectmanager.core import specification, scan, template
 from projectmanager.util import io
 
 
 def main():
-    args = sys.argv[1:]
-    if len(args) == 0:
-        display_info()
-        return
+    args = parse_args()
 
-    match args[0]:
+    match args.command:
         case "init":
-            init(args[1:])
+            init(args.title, args.force)
         case "generate":
-            generate(args[1:])
+            generate(args.title, args.path, args.force)
         case "add":
-            add(args[1:])
+            assert args.item in ("objective", "path")
+            if args.item == "objective":
+                add_objective(args.name, args.description)
+            else:
+                add_path_group(args.name, args.dir)
         case "view":
-            view(args[1:])
+            if args.item is None or args.item == "all":
+                view_all()
+            elif args.item == "objectives":
+                view_objectives()
+            elif args.item == "paths":
+                view_path_groups()
+            elif args.item == "objective":
+                view_objective(args.name)
+            elif args.item == "path":
+                view_path_group(args.name)
         case "rm":
-            remove(args[1:])
+            remove(args.item, args.name)
         case "scan":
-            scan_command(args[1:])
+            scan_command()
+        case "set":
+            set_command(args.name, args.value)
+        case "unset":
+            set_command(args.name, None)
 
 
-def init(args: list[str]):
-    if io.read_specification() is not None:
+# @FEAT init DONE
+def init(title: str, force: bool):
+    if io.read_specification() is not None and not force:
         choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
-            return
-    title = input("Project title: ") if len(args) < 1 else args[0]
+            exit(0)
+
     io.write_specification(specification.init_spec(title))
 
 
-def generate(args: list[str]):
-    if io.read_specification() is not None:
+# @FEAT generate ON-HOLD
+def generate(title: str, path: str | None, force: bool):
+    if io.read_specification() is not None and not force:
         choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
-            return
-    title = input("Project title: ") if len(args) < 1 else args[0]
-    template_path = input("Template path: ") if len(args) < 2 else args[1]
+            exit(0)
 
-    with open(template_path, encoding="utf-8") as file:
-        template.create_from_template(title, json.load(file))
+    if path is None:
+        path = input("Template path: ")
+
+    with open(path, encoding="utf-8") as file:
+        template_data = json.load(file)
+
+    io.write_specification(template.create_from_template(title, template_data))
 
 
-def add(args: list[str]):
-    spec_data = io.read_specification()
-
-    if spec_data is None:
-        print("Specification not found. Please initialize the specification first.")
-        exit(1)
-
-    what_to_add = input("What would you like to add? (objective | path): ") if len(args) < 1 else args[0]
-
-    if what_to_add == "objective":
-        objective_name = input("Objective name: ") if len(args) < 2 else args[1]
-        objective_description = input("Objective description: ") if len(args) < 3 else args[2]
-        try:
-            specification.add_objective(spec_data, objective_name, objective_description)
-        except ValueError as e:
-            print(f"Adding Objective failed... {e}")
-            exit(1)
-    elif what_to_add == "path":
-        path_name = input("Path Group name: ") if len(args) < 2 else args[1]
-        path_dir = input("Path Group directory path: ") if len(args) < 3 else args[2]
-        extensions = input("Extensions (separated by \", \"): ").split(", ") if len(args) < 4 else args[3:]
-        try:
-            specification.add_path_group(spec_data, path_name, path_dir, extensions)
-        except ValueError as e:
-            print(f"Adding Path Group failed... {e}")
-            exit(1)
-    else:
-        print("Invalid option; please enter \"objective\" or \"path\".")
+# @FEAT add.objective DONE
+def add_objective(name: str, description: str | None):
+    spec_data = get_spec_data()
+    if description is None:
+        description = ""
+    try:
+        specification.add_objective(spec_data, name, description)
+    except ValueError as e:
+        io.err(f"Adding Objective failed... {e}")
         exit(1)
 
     io.write_specification(spec_data)
 
 
-def view(args: list[str]):
-    spec_data = io.read_specification()
+# @FEAT add.path_group DONE
+def add_path_group(name: str, dir_path: str):
+    spec_data = get_spec_data()
+    extensions = [extension.strip() for extension in input("Extensions (separated by \", \"): ").split(",")]
+    try:
+        specification.add_path_group(spec_data, name, dir_path, extensions)
+    except ValueError as e:
+        io.err(f"Adding Path Group failed... {e}")
+        exit(1)
 
-    if spec_data is None:
-        display_info()
-        return
+    io.write_specification(spec_data)
 
-    if len(args) == 0:
-        print(spec_data["title"])
-        print("Objectives")
-        for objective in spec_data.get("objectives", []):
-            print('\t', specification.objective_to_str(objective))
-        print("\nPath Groups")
-        for path_group in spec_data.get("pathGroups", []):
-            print('\t', specification.path_group_to_str(path_group))
-    elif args[0] == "objectives":
-        for objective in spec_data.get("objectives", []):
+
+# @FEAT view.all DONE
+def view_all():
+    spec_data = get_spec_data()
+    print(spec_data["title"])
+    print("Objectives")
+    for objective in spec_data.get("objectives", []):
+        print('\t', specification.objective_to_str(objective))
+    print("\nPath Groups")
+    for path_group in spec_data.get("pathGroups", []):
+        print('\t', specification.path_group_to_str(path_group))
+
+
+# @FEAT view.objectives DONE
+def view_objectives():
+    spec_data = get_spec_data()
+    for objective in spec_data.get("objectives", []):
+        print(specification.objective_to_str(objective))
+
+
+# @FEAT view.path_groups DONE
+def view_path_groups():
+    spec_data = get_spec_data()
+    for path_group in spec_data.get("pathGroups", []):
+        print(specification.path_group_to_str(path_group))
+
+
+# @FEAT view.objective DONE
+def view_objective(name: str):
+    spec_data = get_spec_data()
+    for objective in spec_data.get("objectives", []):
+        if objective["name"] == name:
             print(specification.objective_to_str(objective))
-    elif args[0] == "objective":
-        name_to_search = input("Please enter objective name to view: ") if len(args) < 2 else args[1]
-        objective_to_display = None
-        for objective in spec_data.get("objectives", []):
-            if objective["name"] == name_to_search:
-                objective_to_display = objective
-        if objective_to_display is None:
-            print("Objective not found.")
-        else:
-            print(specification.objective_to_str(objective_to_display))
-    elif args[0] == "paths":
-        for path_group in spec_data.get("pathGroups", []):
+            break
+    else:
+        print("Objective not found.")
+
+
+# @FEAT view.path_group DONE
+def view_path_group(name: str):
+    spec_data = get_spec_data()
+    for path_group in spec_data.get("pathGroups", []):
+        if path_group["name"] == name:
             print(specification.path_group_to_str(path_group))
-    elif args[0] == "path":
-        name_to_search = input("Please enter path group name to view: ") if len(args) < 2 else args[1]
-        path_group_to_display = None
-        for path_group in spec_data.get("pathGroups", []):
-            if path_group["name"] == name_to_search:
-                path_group_to_display = path_group
-        if path_group_to_display is None:
-            print("Path Group not found.")
-        else:
-            print(specification.path_group_to_str(path_group_to_display))
+            break
     else:
-        print("Invalid option. To view all objectives, use objectives; To view all paths use paths. To view an objective or a path, use 'objective' or 'path'")
+        print("Path Group not found.")
 
 
-def remove(args: list[str]):
-    spec_data = io.read_specification()
-
-    if spec_data is None:
-        print("Specification not found. Please init the specification first.")
-        exit(1)
-
-    what_to_remove = input("What would you like to remove ? (objective | path): ") if len(args) < 1 else args[0]
-    if what_to_remove not in ("objective", "path"):
-        print("Invalid option.")
-        exit(1)
-    name_to_remove = input(f"{what_to_remove} name: ") if len(args) < 2 else args[1]
-    if what_to_remove == "objective":
-        specification.remove_objective(spec_data, name_to_remove)
+# @FEAT remove DONE
+def remove(item: str, name: str):
+    spec_data = get_spec_data()
+    if item == "objective":
+        specification.remove_objective(spec_data, name)
     else:
-        specification.remove_path_group(spec_data, name_to_remove)
-
+        specification.remove_path_group(spec_data, name)
     io.write_specification(spec_data)
 
 
-def scan_command(args: list[str]):
-    spec_data = io.read_specification()
-
-    if spec_data is None:
-        print("Specification not found. Please init the specification first.")
-        exit(1)
-
-    item_to_scan = None if len(args) < 1 else args[0]
+# @FEAT scan ON-HOLD
+def scan_command():
+    spec_data = get_spec_data()
 
     if len(spec_data.get("pathGroups", [])) == 0:
         print("No path groups found. Please add a path group to scan.")
         exit(1)
 
     for path_group in spec_data["pathGroups"]:
-        if item_to_scan is None or item_to_scan == "todos":
-            print(f"Scanning {path_group['name']} for todos...")
-            found_instances = scan.scan_path_group_for_todos(path_group)
-            for found_instance in found_instances:
-                if len(found_instance[1]) == 0:
-                    continue
-                print(found_instance[0], *found_instance[1], sep="\n\t")
-        if item_to_scan is None or item_to_scan == "objecitves":
-            print(f"Scanning {path_group['name']} for objectives...")
-            found_instances = scan.scan_path_group_for_objectives(path_group)
-            for found_instance in found_instances:
-                if len(found_instance[1]) == 0:
-                    continue
-                print(found_instance[0], *found_instance[1], sep="\n\t")
+        print(f"Path Group: {path_group['name']}")
+        print(f"Scanning {path_group['name']} for todos...")
+        scan.scan_path_group_for_todos(path_group, spec_data.get("options", {}).get("todoFlag"))
+        print(f"\nScanning {path_group['name']} for objectives...")
+        scan.scan_path_group_for_objectives(path_group, spec_data.get("objectives", []), spec_data.get("options", {}).get("objectiveFlag"))
+        print()
 
 
-def display_info():
-    print("Project Manager\nA concise project management tool\n")
-    print("init\t\tInitialize a new project specification")
-    print("generate\t\tGenerate a new project specification from a template")
-    print("add\t\tAdd an objective or a path to the specification")
-    print("view\t\tView specification data")
-    print("rm\t\tRemove an objective or path by name")
-    print("scan\t\tScan path groups for todos and objective flags")
+# @FEAT set-options DONE
+def set_command(option_name: str, option_val: str | None):
+    spec_data = get_spec_data()
+    
+    specification.set_option(spec_data, option_name, option_val)
+
+    io.write_specification(spec_data)
+
+
+def get_spec_data() -> dict:
+    spec_data = io.read_specification()
+    if spec_data is None:
+        print("Specification not found. Please init the specification first.")
+        exit(1)
+    return spec_data
 
 
 if __name__ == '__main__':
