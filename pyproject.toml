@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "project_manager"
+name = "projectmanager"
 version = "0.1.0"
 description = "A tool to manage project information and track progress."
 authors = [{ name = "Samuel John", email = "samuel.john.codes@gmail.com" }]
@@ -16,5 +16,6 @@ manager = "projectmanager.main:main"
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]
-where = ["projectmanager"]
+where = ["."]
+exclude = ["templates"]
 
