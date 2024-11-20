@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from projectmanager.config import PM_SPECIFICATION_FILE_NAME
+from projectmanager.validation.specification import validate_spec
 
 
 def read_specification() -> dict | None:
@@ -13,6 +14,10 @@ def read_specification() -> dict | None:
             json_data = json.load(file)
     except Exception as e:
         print("Something went wrong when parsing the specification file...", e)
+        exit(1)
+    
+    if not validate_spec(json_data):
+        print("Your specification is invalid... It is recommended to reinitialize the specification.")
         exit(1)
 
     return json_data
