@@ -13,11 +13,11 @@ def read_specification() -> dict | None:
         with open(PM_SPECIFICATION_FILE_NAME, encoding='utf-8') as file:
             json_data = json.load(file)
     except Exception as e:
-        print("Something went wrong when parsing the specification file...", e)
+        err(f"Something went wrong when parsing the specification file... {e}")
         exit(1)
     
     if not validate_spec(json_data):
-        print("Your specification is invalid... It is recommended to reinitialize the specification.")
+        err("Your specification is invalid... It is recommended to reinitialize the specification.")
         exit(1)
 
     return json_data
