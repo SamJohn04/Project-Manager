@@ -49,17 +49,23 @@ For paths, specify the extensions that should be a part of the search.
 
 ---
 
+To add an objective, use:
+```commandline
+manager add objective [-d DESCRIPTION] name
+```
+
+To add a path group, use:
+```commandline
+manager add path name directoryPath
+```
+When adding a path group, you will be prompted for a list of extensions to be included, separated by commas
+
 To view data of the specification, use:
 ```commandline
 manager view
 ```
 
-To scan each path group for TODO flags (default TODO) and objective flags (default @OBJECTIVE), use:
-```commandline
-manager scan
-```
-
-To set the TODO and Objective flags, use:
+To set the TODO flag or Objective flag, use:
 ```commandline
 manager set {todoFlag,objectiveFlag} value
 ```
@@ -68,6 +74,19 @@ To reset them, use:
 ```commandline
 manager unset {todoFlag,objectiveFlag}
 ```
+
+### Scan
+
+To scan each path group for TODO flags (default TODO) and objective flags (default @OBJECTIVE), use:
+
+```commandline
+manager scan
+```
+
+The scan command will search through all the files in each path group (with any of the specified extensions), and will display all items that are marked TODO and all objective flags.
+The TODO flag can be used to mark incomplete sections. On scanning, the Manager will show all TODO flags in each path group, along with the file path and the lines.
+
+The Objective flag is used for denoting the main section of code relating to a specific objective. The scan will show the status of each objective, as specified along with the flag.
 
 ### TODO Flags
 
