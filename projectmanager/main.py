@@ -2,7 +2,7 @@ import json
 
 from projectmanager.arg_parse import parse_args
 from projectmanager.core import specification, scan, template
-from projectmanager.util import io
+from projectmanager.util import io, style
 
 
 def main():
@@ -43,7 +43,8 @@ def main():
 # @FEAT init DONE
 def init(title: str, force: bool):
     if io.read_specification() is not None and not force:
-        choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
+        io.warn("Specification already exists.")
+        choice = input("Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
             exit(0)
 
@@ -53,7 +54,8 @@ def init(title: str, force: bool):
 # @FEAT generate ON-HOLD
 def generate(title: str, path: str | None, force: bool):
     if io.read_specification() is not None and not force:
-        choice = input("Specification already exists. Initialize and overwrite the file? (y|N): ")
+        io.warn("Specification already exists.")
+        choice = input("Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
             exit(0)
 
@@ -74,7 +76,7 @@ def add_objective(name: str, description: str | None):
     try:
         specification.add_objective(spec_data, name, description)
     except ValueError as e:
-        io.err(f"Adding Objective failed... {e}")
+        io.err(f"Adding Objective failed: {e}")
         exit(1)
 
     io.write_specification(spec_data)
@@ -87,7 +89,7 @@ def add_path_group(name: str, dir_path: str):
     try:
         specification.add_path_group(spec_data, name, dir_path, extensions)
     except ValueError as e:
-        io.err(f"Adding Path Group failed... {e}")
+        io.err(f"Adding Path Group failed: {e}")
         exit(1)
 
     io.write_specification(spec_data)
@@ -96,13 +98,14 @@ def add_path_group(name: str, dir_path: str):
 # @FEAT view.all DONE
 def view_all():
     spec_data = get_spec_data()
-    print(spec_data["title"])
-    print("Objectives")
+    print(style.blue_text(style.bold(spec_data["title"])))
+    print(style.blue_text("Objectives"))
     for objective in spec_data.get("objectives", []):
-        print('\t', specification.objective_to_str(objective))
-    print("\nPath Groups")
+        print(f'|--', specification.objective_to_str(objective))
+    print()
+    print(style.blue_text("Path Groups"))
     for path_group in spec_data.get("pathGroups", []):
-        print('\t', specification.path_group_to_str(path_group))
+        print('|--', specification.path_group_to_str(path_group))
 
 
 # @FEAT view.objectives DONE
@@ -127,7 +130,7 @@ def view_objective(name: str):
             print(specification.objective_to_str(objective))
             break
     else:
-        print("Objective not found.")
+        io.warn("Objective not found.")
 
 
 # @FEAT view.path_group DONE
@@ -138,7 +141,7 @@ def view_path_group(name: str):
             print(specification.path_group_to_str(path_group))
             break
     else:
-        print("Path Group not found.")
+        io.warn("Path Group not found.")
 
 
 # @FEAT remove DONE
@@ -156,11 +159,11 @@ def scan_command():
     spec_data = get_spec_data()
 
     if len(spec_data.get("pathGroups", [])) == 0:
-        print("No path groups found. Please add a path group to scan.")
+        io.warn("No path groups found. Please add a path group to scan.")
         exit(1)
 
     for path_group in spec_data["pathGroups"]:
-        print(f"Path Group: {path_group['name']}")
+        print(style.bold(f"Path Group: {path_group['name']}"))
         print(f"Scanning {path_group['name']} for todos...")
         scan.scan_path_group_for_todos(path_group, spec_data.get("options", {}).get("todoFlag"))
         print(f"\nScanning {path_group['name']} for objectives...")
@@ -180,7 +183,7 @@ def set_command(option_name: str, option_val: str | None):
 def get_spec_data() -> dict:
     spec_data = io.read_specification()
     if spec_data is None:
-        print("Specification not found. Please init the specification first.")
+        io.err("Specification not found. Please initialize the specification first.")
         exit(1)
     return spec_data
 

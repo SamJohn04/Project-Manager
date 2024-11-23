@@ -6,7 +6,7 @@ def init_spec(project_title: str) -> dict:
 
 def add_objective(spec_data: dict, name: str, description: str = "") -> None:
     if ' ' in name:
-        raise ValueError("Objective name should not have whitespace")
+        raise ValueError("Objective name should not have whitespace.")
 
     if "objectives" not in spec_data:
         spec_data["objectives"] = []
