@@ -56,22 +56,3 @@ def scan_objectives_from_content(lines: list[str], flag: str, file_name: str, ob
             status = "unmarked" if len(parts) == 1 or len(parts[1]) == 0 else parts[1]
             objective_flags[parts[0]].append(f"{status} ({file_name} {index + 1})")
 
-
-def display_todo_instance_by_file(todo_instance: tuple[str, list[int]]):
-    file_path, todos = todo_instance
-    if len(todos) == 0:
-        return
-
-    print(file_path)
-    with open(file_path, encoding="utf-8") as file:
-        lines = file.readlines()
-
-    assert len(lines) > max(todos)
-    for index in todos:
-        print(f"\t{index}")
-        if index > 0:
-            print(f"\t\t{lines[index-1]}")
-        print(f"\t\t{lines[index]}")
-        if index + 1 < len(lines):
-            print(f"\t\t{lines[index+1]}")
-
