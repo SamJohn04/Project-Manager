@@ -38,13 +38,13 @@ def test_validate_spec():
     assert not specification.validate_spec({"title": "project", "options": []})
     assert not specification.validate_spec({"title": "project", "options": {"todoFlag": 1}})
 
-    assert specification.validate_spec({"title": "project", "options": {"todoFlag": "# TODO"}})
+    assert specification.validate_spec({"title": "project", "options": {"todoFlag": "// TODO"}})
 
     assert specification.validate_spec({
         "title": "project",
         "objectives": [{"name": "ab", "description": ""}],
         "pathGroups": [{"name": "main", "dirPath": "src", "extensions": ["py", "json"]}],
-        "options": {"todoFlag": "# TODO"}
+        "options": {"todoFlag": "// TODO"}
         })
 
 

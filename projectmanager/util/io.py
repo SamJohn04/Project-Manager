@@ -36,3 +36,7 @@ def err(message: str):
 def warn(message: str):
     print(style.yellow_text(f"WARNING: {message}"))
 
+
+def success(message: str):
+    print(style.green_text(message))
+

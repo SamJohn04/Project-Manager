@@ -101,7 +101,7 @@ def view_all():
     print(style.blue_text(style.bold(spec_data["title"])))
     print(style.blue_text("Objectives"))
     for objective in spec_data.get("objectives", []):
-        print(f'|--', specification.objective_to_str(objective))
+        print('|--', specification.objective_to_str(objective))
     print()
     print(style.blue_text("Path Groups"))
     for path_group in spec_data.get("pathGroups", []):
