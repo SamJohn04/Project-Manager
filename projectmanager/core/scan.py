@@ -1,8 +1,9 @@
+from projectmanager import config
 from projectmanager.config import DEFAULT_OBJECTIVE_FLAG, DEFAULT_TODO_FLAG
 from projectmanager.util import io, paths, style
 
 
-def scan_path_group_for_todos(path_group: dict, flag: str | None = None):
+def scan_path_group_for_todos(path_group: dict, flag: str | None = None, verbosity_level: int = config.V_NORMAL):
     todo_found_in_group = False
     if flag is None:
         flag = DEFAULT_TODO_FLAG
@@ -11,15 +12,15 @@ def scan_path_group_for_todos(path_group: dict, flag: str | None = None):
         with open(path, encoding="utf-8") as file:
             lines = file.read().splitlines()
         todo_indices = scan_todos_from_content(lines, flag)
-        display_todos_by_content(path, lines, todo_indices)
+        display_todos_by_content(path, lines, todo_indices, verbosity_level)
         if len(todo_indices) > 0:
             todo_found_in_group = True
 
-    if not todo_found_in_group:
+    if not todo_found_in_group and verbosity_level != config.V_QUIET:
         io.success(f"No TODOs found in {path_group['name']}")
 
 
-def scan_path_group_for_objectives(path_group: dict, objectives: list[dict], flag: str | None = None):
+def scan_path_group_for_objectives(path_group: dict, objectives: list[dict], flag: str | None = None, verbosity_level: int = config.V_NORMAL):
     if flag is None:
         flag = DEFAULT_OBJECTIVE_FLAG
 
@@ -31,13 +32,29 @@ def scan_path_group_for_objectives(path_group: dict, objectives: list[dict], fla
             lines = file.read().splitlines()
         scan_objectives_from_content(lines, flag, str(path), objective_flags, statuses)
 
+    if verbosity_level == config.V_QUIET:
+        total_statuses = sum(statuses.values())
+        for status in statuses:
+            print(f"{style.green_text(status)}: {statuses[status]}/{total_statuses}")
+        return
+
+    if verbosity_level == config.V_NORMAL:
+        for objective in objective_flags:
+            print(objective, end=": ")
+            print(", ".join(status for status, *_ in objective_flags[objective]))
+        print()
+        total_statuses = sum(statuses.values())
+        for status in statuses:
+            print(f"{style.green_text(status)}: {statuses[status]}/{total_statuses}")
+        return
+
     for objective in objective_flags:
         if len(objective_flags[objective]) == 0:
             print("No flag for", objective, "was found in", path_group["name"])
-            continue
-        print(objective)
-        for status, file_name, index in objective_flags[objective]:
-            print(f"\t{status} ({file_name}: line {index + 1})")
+        if len(objective_flags[objective]) > 0:
+            print(objective)
+            for status, file_name, index in objective_flags[objective]:
+                print(f"\t{status} ({file_name}: line {index + 1})")
     
     print()
     total_statuses = sum(statuses.values())
@@ -81,8 +98,19 @@ def scan_objectives_from_content(lines: list[str], flag: str, file_name: str, ob
     return statuses
 
 
-def display_todos_by_content(file_name, lines: list[str], todo_indices: list[int]):
+def display_todos_by_content(file_name, lines: list[str], todo_indices: list[int], verbosity_level: int = config.V_NORMAL):
     if len(todo_indices) == 0:
+        return
+
+    if verbosity_level == config.V_QUIET:
+        print(file_name, end=": ")
+        print(', '.join(str(todo_index) for todo_index in todo_indices))
+        return
+
+    if verbosity_level == config.V_NORMAL:
+        print(file_name)
+        for todo_index in todo_indices:
+            print(style.bold(f"\t{todo_index + 1}. {lines[todo_index]}"))
         return
 
     print(file_name)

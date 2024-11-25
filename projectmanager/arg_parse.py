@@ -1,8 +1,17 @@
 import argparse
 
+from projectmanager import config
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="A concise project management tool")
+    verbosity_group = parser.add_mutually_exclusive_group()
+    verbosity_group.add_argument('-v', '--verbose', action='store_const', const=config.V_VERBOSE, dest="verbosity",
+                                 help="Enable verbose mode (detailed output)")
+    verbosity_group.add_argument('-q', '--quiet', action='store_const', const=config.V_QUIET, dest="verbosity",
+                                 help="Enable quiet mode (minimal output)")
+    verbosity_group.set_defaults(verbosity=config.V_NORMAL)
+
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     add_init_subparser(subparsers)
@@ -61,7 +70,6 @@ def add_add_subparser(subparsers):
             )
     add_path_group_parser.add_argument("name", help="Name of the path group")
     add_path_group_parser.add_argument("dir", help="Directory path of the path group")
-    # add_path_group_parser.add_argument("--extension", help="Extension(s) of files to be scanned as a part of the path group", action="append")
 
 
 def add_view_subparser(subparsers):
