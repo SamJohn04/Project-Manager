@@ -242,7 +242,7 @@ def remove(item: str, name: str, verbosity_level: int = config.V_NORMAL):
         io.success(f"{item} {name} has been removed successfully.")
 
 
-# @FEAT scan ON-HOLD
+# @FEAT scan DONE
 def scan_command(verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
