@@ -83,8 +83,8 @@ To scan each path group for TODO flags (default TODO) and objective flags (defau
 manager scan
 ```
 
-The scan command will search through all the files in each path group (with any of the specified extensions), and will display all items that are marked TODO and all objective flags.
-The TODO flag can be used to mark incomplete sections. On scanning, the Manager will show all TODO flags in each path group, along with the file path and the lines.
+The scan command will search through all the files in each path group (with any of the specified extensions), and will display all TODO flags and all objective flags in the code.
+The TODO flag can be used to mark incomplete sections. On scanning, the Manager will show all TODO flags in each path group, along with the file path and the line where it is present.
 
 The Objective flag is used for denoting the main section of code relating to a specific objective. The scan will show the status of each objective, as specified along with the flag.
 
@@ -109,6 +109,13 @@ Each path group is recommended to only have one Objective flag per objective.
 
 The default Objective flag is `@OBJECTIVE`
 
+## Templates
+
+Templates are JSON files having the following information:
+
+- `name`: The name of the template, for ease of identification
+- `toCreate`: A list of files or directories to create. Contains the `path` and `type` (`file` or `dir`). If `type` is `file`, may contain `content`. All parent directories will be created, if they do not exist.
+- `pathGroups`: A list of path groups to be added to the generated projects. (*optional*)
 
 ## Future Enhancements
 
