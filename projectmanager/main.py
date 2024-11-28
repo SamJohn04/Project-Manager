@@ -1,5 +1,3 @@
-import json
-
 from projectmanager import config
 from projectmanager.arg_parse import parse_args
 from projectmanager.core import specification, scan, template
@@ -69,10 +67,10 @@ def generate(title: str, path: str | None, force: bool, verbosity_level: int = c
     if path is None:
         path = input("Template path: ")
 
-    with open(path, encoding="utf-8") as file:
-        template_data = json.load(file)
+    template_data = io.read_template(path)
 
-    io.write_specification(template.create_from_template(title, template_data, verbosity_level))
+    spec_data = template.create_from_template(title, template_data, verbosity_level)
+    io.write_specification(spec_data)
 
     if verbosity_level == config.V_NORMAL:
         io.success(f"Specification generated")
