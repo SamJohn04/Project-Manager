@@ -13,9 +13,8 @@ def create_from_template(project_title: str, template_data: dict, verbosity_leve
         if item_to_create["type"] == "dir":
             path_to_create.mkdir(parents=True, exist_ok=True)
         elif item_to_create["type"] == "file":
-            path_to_create.parent.mkdir(parents=True, exist_ok=True)
-            with open(path_to_create, 'w') as file:
-                file.write(item_to_create.get("content", ""))
+            content = item_to_create.get("content", "")
+            create_file(project_title, path_to_create, content)
 
     if verbosity_level != config.V_QUIET:
         io.success("Files and Directories to be created have been generated.")
@@ -32,4 +31,12 @@ def create_from_template(project_title: str, template_data: dict, verbosity_leve
             print('|--', specification.path_group_to_str(path_group))
     
     return spec_data
+
+
+def create_file(project_title: str, file_path_to_create: Path, content: str):
+    content = content.replace(config.TEMPLATE_TITLE_FLAG, project_title)
+
+    file_path_to_create.parent.mkdir(parents=True, exist_ok=True)
+    with open(file_path_to_create, 'w') as file:
+        file.write(content)
 

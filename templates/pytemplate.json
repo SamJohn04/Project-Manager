@@ -20,6 +20,11 @@
 		{
 			"path": "tests",
 			"type": "dir"
-		}
+		},
+        {
+            "path": "pyproject.toml",
+            "type": "file",
+            "content": "[build-system]\nrequires = [\"setuptools\", \"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"<%TITLE%>\"\nversion = \"0.1.0\"\n"
+        }
 	]
 }
