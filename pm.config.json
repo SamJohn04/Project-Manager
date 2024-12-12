@@ -1,1 +1,87 @@
-{"title": "pm", "pathGroups": [{"name": "test", "dirPath": "tests", "extensions": ["py"]}, {"name": "main", "dirPath": "projectmanager", "extensions": ["py"]}], "objectives": [{"name": "init", "description": ""}, {"name": "generate", "description": ""}, {"name": "add.objective", "description": ""}, {"name": "add.path_group", "description": ""}, {"name": "view.all", "description": ""}, {"name": "view.objectives", "description": ""}, {"name": "view.objective", "description": ""}, {"name": "view.path_group", "description": ""}, {"name": "view.path_groups", "description": ""}, {"name": "remove", "description": ""}, {"name": "scan", "description": ""}, {"name": "set-options", "description": ""}], "options": {"todoFlag": "# TODO", "objectiveFlag": "@FEAT"}}
+{
+    "title": "pm",
+    "pathGroups": [
+        {
+            "name": "test",
+            "dirPath": "tests",
+            "extensions": [
+                "py"
+            ]
+        },
+        {
+            "name": "main",
+            "dirPath": "projectmanager",
+            "extensions": [
+                "py"
+            ]
+        }
+    ],
+    "objectives": [
+        {
+            "name": "init",
+            "description": ""
+        },
+        {
+            "name": "generate",
+            "description": ""
+        },
+        {
+            "name": "add.objective",
+            "description": ""
+        },
+        {
+            "name": "add.path_group",
+            "description": ""
+        },
+        {
+            "name": "view.all",
+            "description": ""
+        },
+        {
+            "name": "view.objectives",
+            "description": ""
+        },
+        {
+            "name": "view.objective",
+            "description": ""
+        },
+        {
+            "name": "view.path_group",
+            "description": ""
+        },
+        {
+            "name": "view.path_groups",
+            "description": ""
+        },
+        {
+            "name": "remove",
+            "description": ""
+        },
+        {
+            "name": "scan",
+            "description": ""
+        },
+        {
+            "name": "set-options",
+            "description": ""
+        }
+    ],
+    "options": {
+        "todoFlag": "# TODO",
+        "objectiveFlag": "@FEAT"
+    },
+    "objectivesFormat": [
+        {
+            "pathGroup": "main",
+            "path": "core/%NAME%.py",
+            "content": "# @FEAT %NAME% TODO\ndef %NAME%():\n\t# TODO\n\tpass\n",
+            "append": false
+        },
+        {
+            "pathGroup": "tests",
+            "path": "core/test_<%NAME%>.py",
+            "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n\t# TODO\n\tpass\n",
+            "append": false
+        }
+    ]
+}
