@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from projectmanager import config
-from projectmanager.core import specification
+from projectmanager.core import generate, specification
 from projectmanager.util import io
 
 
@@ -34,7 +34,7 @@ def create_from_template(project_title: str, template_data: dict, verbosity_leve
 
 
 def create_file(project_title: str, file_path_to_create: Path, content: str):
-    content = content.replace(config.TITLE_PLACEHOLDER, project_title)
+    content = generate.replace_placeholders_in_content(content, title=project_title)
 
     file_path_to_create.parent.mkdir(parents=True, exist_ok=True)
     with open(file_path_to_create, 'w') as file:

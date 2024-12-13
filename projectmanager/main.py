@@ -56,7 +56,7 @@ def init(title: str, force: bool, verbosity_level: int = config.V_NORMAL):
         io.success("Specification has been initialized successfully.")
 
 
-# @FEAT generate ON-HOLD
+# @FEAT generate IN-PROGRESS
 def generate(title: str, path: str | None, force: bool, verbosity_level: int = config.V_NORMAL):
     if io.read_specification() is not None and not force:
         io.warn("Specification already exists.")
