@@ -30,9 +30,10 @@ def add_init_subparser(subparsers):
     init_parser = subparsers.add_parser(
             "init",
             help="Initialize a new project specification",
-            description="Initialize a new project specification, with only the project title."
+            description="Initialize a new project specification from a source template or with only the project title"
             )
     init_parser.add_argument("title", help="Project title")
+    init_parser.add_argument("--template", help="Path to the source template")
     init_parser.add_argument("-f", "--force", action="store_true", help="Initialze specification by force, overwriting the file if it exists.")
 
 
