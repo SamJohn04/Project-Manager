@@ -79,7 +79,7 @@
         },
         {
             "pathGroup": "tests",
-            "path": "core/test_<%NAME%>.py",
+            "path": "core/test_%NAME%.py",
             "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n\t# TODO\n\tpass\n",
             "append": false
         }
