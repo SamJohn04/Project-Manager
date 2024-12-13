@@ -9,7 +9,7 @@ def main():
 
     match args.command:
         case "init":
-            init(args.title, args.force, args.verbosity)
+            init(args.title, args.template, args.force, args.verbosity)
         case "generate":
             generate(args.title, args.path, args.force, args.verbosity)
         case "add":
@@ -40,14 +40,20 @@ def main():
 
 
 # @FEAT init DONE
-def init(title: str, force: bool, verbosity_level: int = config.V_NORMAL):
+def init(title: str, template_path: str, force: bool, verbosity_level: int = config.V_NORMAL):
     if io.read_specification() is not None and not force:
         io.warn("Specification already exists.")
         choice = input("Initialize and overwrite the file? (y|N): ")
         if choice not in ("y", "Y"):
             exit(0)
 
-    io.write_specification(specification.init_spec(title))
+    if template_path is None:
+        spec_data = specification.init_spec(title)
+    else:
+        template_data = io.read_template(template_path)
+        spec_data = template.create_from_template(title, template_data, verbosity_level)
+
+    io.write_specification(spec_data)
 
     if verbosity_level == config.V_NORMAL:
         io.success(f"Specification initialized")
@@ -56,7 +62,7 @@ def init(title: str, force: bool, verbosity_level: int = config.V_NORMAL):
         io.success("Specification has been initialized successfully.")
 
 
-# @FEAT generate IN-PROGRESS
+# @FEAT generate ON-HOLD
 def generate(title: str, path: str | None, force: bool, verbosity_level: int = config.V_NORMAL):
     if io.read_specification() is not None and not force:
         io.warn("Specification already exists.")
