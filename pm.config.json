@@ -73,13 +73,13 @@
     "objectivesFormat": [
         {
             "pathGroup": "main",
-            "path": "core/%NAME%.py",
+            "path": "projectmanager/core/%NAME%.py",
             "content": "# @FEAT %NAME% TODO\ndef %NAME%():\n\t# TODO\n\tpass\n",
             "append": false
         },
         {
-            "pathGroup": "tests",
-            "path": "core/test_%NAME%.py",
+            "pathGroup": "test",
+            "path": "tests/core/test_%NAME%.py",
             "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n\t# TODO\n\tpass\n",
             "append": false
         }
