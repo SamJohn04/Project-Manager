@@ -103,7 +103,7 @@ It is expected that the Objective flag is followed by the objective name (and, o
 The flag is expected to be added as a comment.
 
 
-```python
+```
 @OBJECTIVE init-specification On-Going
 ```
 
