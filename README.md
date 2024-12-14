@@ -36,7 +36,7 @@ manager init title
 ```
 
 > To initialize the specification from a template, use:
-> `manager generate [--path PATH] title`
+> `manager init [--template PATH] title`
 
 This will generate the `pm.config.json` file.
 
@@ -92,6 +92,7 @@ The Objective flag is used for denoting the main section of code relating to a s
 
 TODO flags are flags to denote that some part of the project has been left "TODO".
 The `scan` command searches for the TODO flag across the files, and displays all instances of it.
+The flag is expected to be added as a comment.
 
 The default TODO flag is `TODO`
 
@@ -99,9 +100,11 @@ The default TODO flag is `TODO`
 
 Objective flags are flags to the main section of a code tied to a specific objective.
 It is expected that the Objective flag is followed by the objective name (and, optionally, the current status of it), separated by whitespaces.
+The flag is expected to be added as a comment.
+
 
 ```python
-# @OBJECTIVE init-specification On-Going
+@OBJECTIVE init-specification On-Going
 ```
 
 The `scan` command searches for all instances of the Objective flag, and displays the status of each objective for each path group.
