@@ -42,10 +42,8 @@ def main():
 # @FEAT init DONE
 def init(title: str, template_path: str, force: bool, verbosity_level: int = config.V_NORMAL):
     if io.read_specification() is not None and not force:
-        io.warn("Specification already exists.")
-        choice = input("Initialize and overwrite the file? (y|N): ")
-        if choice not in ("y", "Y"):
-            exit(0)
+        io.err("Specification already exists. Use -f | --force to reinitialize and overwrite anyway.")
+        exit(1)
 
     if template_path is None:
         spec_data = specification.init_spec(title)
