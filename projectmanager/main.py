@@ -62,27 +62,11 @@ def init(title: str, template_path: str, force: bool, verbosity_level: int = con
         io.success("Specification has been initialized successfully.")
 
 
-# @FEAT generate ON-HOLD
+# @FEAT generate REPURPOSE
 def generate(title: str, path: str | None, force: bool, verbosity_level: int = config.V_NORMAL):
-    if io.read_specification() is not None and not force:
-        io.warn("Specification already exists.")
-        choice = input("Initialize and overwrite the file? (y|N): ")
-        if choice not in ("y", "Y"):
-            exit(0)
-
-    if path is None:
-        path = input("Template path: ")
-
-    template_data = io.read_template(path)
-
-    spec_data = template.create_from_template(title, template_data, verbosity_level)
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        io.success(f"Specification generated")
-    elif verbosity_level == config.V_VERBOSE:
-        print(style.bold(title), end=": ")
-        io.success("Specification has been generated successfully.")
+    # TODO the function to be changed to generate code for objectives
+    # Refactoring the project necessary
+    pass
 
 
 # @FEAT add.objective DONE
