@@ -26,31 +26,31 @@
             "description": ""
         },
         {
-            "name": "add.objective",
+            "name": "add_objective",
             "description": ""
         },
         {
-            "name": "add.path_group",
+            "name": "add_path_group",
             "description": ""
         },
         {
-            "name": "view.all",
+            "name": "view_all",
             "description": ""
         },
         {
-            "name": "view.objectives",
+            "name": "view_objectives",
             "description": ""
         },
         {
-            "name": "view.objective",
+            "name": "view_objective",
             "description": ""
         },
         {
-            "name": "view.path_group",
+            "name": "view_path_groups",
             "description": ""
         },
         {
-            "name": "view.path_groups",
+            "name": "view_path_group",
             "description": ""
         },
         {
@@ -62,7 +62,7 @@
             "description": ""
         },
         {
-            "name": "set-options",
+            "name": "set_options",
             "description": ""
         }
     ],

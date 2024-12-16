@@ -67,7 +67,7 @@ def generate(title: str, path: str | None, force: bool, verbosity_level: int = c
     pass
 
 
-# @FEAT add.objective DONE
+# @FEAT add_objective DONE
 def add_objective(name: str, description: str | None, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
     if description is None:
@@ -89,7 +89,7 @@ def add_objective(name: str, description: str | None, verbosity_level: int = con
         io.success(f"Objective {name} has been added successfully.")
 
 
-# @FEAT add.path_group DONE
+# @FEAT add_path_group DONE
 def add_path_group(name: str, dir_path: str, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
     extensions = [extension.strip() for extension in input("Extensions (separated by \", \"): ").split(",")]
@@ -114,7 +114,7 @@ def add_path_group(name: str, dir_path: str, verbosity_level: int = config.V_NOR
         io.success(f"Path Group {name} has been added successfully.")
 
 
-# @FEAT view.all DONE
+# @FEAT view_all DONE
 def view_all(verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
@@ -141,7 +141,7 @@ def view_all(verbosity_level: int = config.V_NORMAL):
             print(f"|-- {option_name}: {spec_data['options'][option_name]}")
 
 
-# @FEAT view.objectives DONE
+# @FEAT view_objectives DONE
 def view_objectives(verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
@@ -157,7 +157,7 @@ def view_objectives(verbosity_level: int = config.V_NORMAL):
             print('|--', specification.objective_to_str(objective))
 
 
-# @FEAT view.path_groups DONE
+# @FEAT view_path_groups DONE
 def view_path_groups(verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
@@ -173,7 +173,7 @@ def view_path_groups(verbosity_level: int = config.V_NORMAL):
             print('|--', specification.path_group_to_str(path_group))
 
 
-# @FEAT view.objective DONE
+# @FEAT view_objective DONE
 def view_objective(name: str, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
     for objective in spec_data.get("objectives", []):
@@ -189,7 +189,7 @@ def view_objective(name: str, verbosity_level: int = config.V_NORMAL):
             io.warn("Objective not found.")
 
 
-# @FEAT view.path_group DONE
+# @FEAT view_path_group DONE
 def view_path_group(name: str, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
     for path_group in spec_data.get("pathGroups", []):
@@ -246,7 +246,7 @@ def scan_command(verbosity_level: int = config.V_NORMAL):
         print()
 
 
-# @FEAT set-options DONE
+# @FEAT set_options DONE
 def set_command(option_name: str, option_val: str | None, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
     
