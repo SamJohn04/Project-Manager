@@ -1,6 +1,7 @@
 from projectmanager import config
 from projectmanager.arg_parse import parse_args
 from projectmanager.core import specification, scan, template
+from projectmanager.core.generate import generate_objective_content
 from projectmanager.util import io, style
 
 
@@ -11,7 +12,7 @@ def main():
         case "init":
             init(args.title, args.template, args.force, args.verbosity)
         case "generate":
-            generate(args.title, args.path, args.force, args.verbosity)
+            generate(args.name, args.path_group, args.verbosity)
         case "add":
             assert args.item in ("objective", "path")
             if args.item == "objective":
@@ -61,10 +62,20 @@ def init(title: str, template_path: str, force: bool, verbosity_level: int = con
 
 
 # @FEAT generate REPURPOSE
-def generate(title: str, path: str | None, force: bool, verbosity_level: int = config.V_NORMAL):
-    # TODO the function to be changed to generate code for objectives
-    # Refactoring the project necessary
-    pass
+def generate(name: str, path_group: str | None, verbosity_level: int = config.V_NORMAL):
+    spec_data = get_spec_data()
+
+    for objective in spec_data.get("objectives", []):
+        if objective["name"] == name:
+            break
+    else:
+        if verbosity_level != config.V_QUIET:
+            io.err("No objective with this name exists.")
+            exit(1)
+
+    generate_objective_content(spec_data, name, path_group)
+    if verbosity_level != config.V_QUIET:
+        io.success("Code of objectives have been generated successfully!")
 
 
 # @FEAT add_objective DONE

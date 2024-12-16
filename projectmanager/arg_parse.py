@@ -40,12 +40,12 @@ def add_init_subparser(subparsers):
 def add_generate_subparser(subparsers):
     generate_parser = subparsers.add_parser(
             "generate",
-            help="Generate a new project specification from a template",
-            description="Generate a new project specification from a template."
+            help="Generate code for objectives from objectivesFormat in project specification. Does not check if the specification is already defined.",
+            description="Generate code for objectives from objectivesFormat in project specification."
             )
-    generate_parser.add_argument("title", help="Project title")
-    generate_parser.add_argument("--path", help="Path to the template")
-    generate_parser.add_argument("-f", "--force", action="store_true", help="Initialze specification by force, overwriting the file if it exists.")
+    generate_parser.add_argument("name", help="Name of objective")
+    generate_parser.add_argument("--path-group", help="Path group name to generate the objective code for.", dest="path_group")
+    # generate_parser.add_argument("-f", "--force", action="store_true", help="Initialze specification by force, overwriting the file if it exists.")
 
 
 def add_add_subparser(subparsers):
