@@ -1,3 +1,4 @@
+import pathlib
 from projectmanager import config
 from projectmanager.util import io
 
@@ -14,12 +15,14 @@ def generate_objective_content(spec_data: dict, objective_name: str, path_group_
                 title=spec_data["title"],
                 objective_name=objective_name
                 )
-        file_name = replace_placeholders_in_content(
+        file_path = replace_placeholders_in_content(
                 objective_format_item["path"],
                 title=spec_data["title"],
                 objective_name=objective_name
                 )
-        with open(file_name, 'a' if objective_format_item.get("append") else 'w') as file:
+        file_path = pathlib.Path(file_path)
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(file_path, 'a' if objective_format_item.get("append") else 'w') as file:
             file.write(content)
 
 

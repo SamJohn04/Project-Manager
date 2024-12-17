@@ -41,9 +41,9 @@ def add_generate_subparser(subparsers):
     generate_parser = subparsers.add_parser(
             "generate",
             help="Generate code for objectives from objectivesFormat in project specification. Does not check if the specification is already defined.",
-            description="Generate code for objectives from objectivesFormat in project specification."
+            description="Generate code for objectives from objectivesFormat in project specification. Does not check if the specification is already defined."
             )
-    generate_parser.add_argument("name", help="Name of objective")
+    generate_parser.add_argument("--name", help="Name of the objective to be added. Ignore to generate for all objectives.")
     generate_parser.add_argument("--path-group", help="Path group name to generate the objective code for.", dest="path_group")
     # generate_parser.add_argument("-f", "--force", action="store_true", help="Initialze specification by force, overwriting the file if it exists.")
 

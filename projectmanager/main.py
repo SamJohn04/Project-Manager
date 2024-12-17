@@ -62,20 +62,15 @@ def init(title: str, template_path: str, force: bool, verbosity_level: int = con
 
 
 # @FEAT generate REPURPOSE
-def generate(name: str, path_group: str | None, verbosity_level: int = config.V_NORMAL):
+def generate(name: str | None, path_group: str | None, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
     for objective in spec_data.get("objectives", []):
-        if objective["name"] == name:
-            break
-    else:
+        if name is not None and objective["name"] != name:
+            continue
+        generate_objective_content(spec_data, objective["name"], path_group)
         if verbosity_level != config.V_QUIET:
-            io.err("No objective with this name exists.")
-            exit(1)
-
-    generate_objective_content(spec_data, name, path_group)
-    if verbosity_level != config.V_QUIET:
-        io.success("Code of objectives have been generated successfully!")
+            io.success(f"Code of objective {objective['name']} has been generated successfully.")
 
 
 # @FEAT add_objective DONE
