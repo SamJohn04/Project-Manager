@@ -22,35 +22,11 @@
             "description": ""
         },
         {
-            "name": "generate",
+            "name": "view",
             "description": ""
         },
         {
-            "name": "add_objective",
-            "description": ""
-        },
-        {
-            "name": "add_path_group",
-            "description": ""
-        },
-        {
-            "name": "view_all",
-            "description": ""
-        },
-        {
-            "name": "view_objectives",
-            "description": ""
-        },
-        {
-            "name": "view_objective",
-            "description": ""
-        },
-        {
-            "name": "view_path_groups",
-            "description": ""
-        },
-        {
-            "name": "view_path_group",
+            "name": "add_item",
             "description": ""
         },
         {
@@ -63,6 +39,10 @@
         },
         {
             "name": "set_options",
+            "description": ""
+        },
+        {
+            "name": "generate",
             "description": ""
         }
     ],
