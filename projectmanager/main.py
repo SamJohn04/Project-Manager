@@ -12,7 +12,7 @@ def main():
         case "init":
             init(args.title, args.template, args.force, args.verbosity)
         case "generate":
-            generate(args.name, args.path_group, args.verbosity)
+            generate(args.objective, args.path_group, args.verbosity)
         case "add":
             assert args.item in ("objective", "path")
             if args.item == "objective":
@@ -62,11 +62,11 @@ def init(title: str, template_path: str, force: bool, verbosity_level: int = con
 
 
 # @FEAT generate REPURPOSE
-def generate(name: str | None, path_group: str | None, verbosity_level: int = config.V_NORMAL):
+def generate(objective_name: str | None, path_group: str | None, verbosity_level: int = config.V_NORMAL):
     spec_data = get_spec_data()
 
     for objective in spec_data.get("objectives", []):
-        if name is not None and objective["name"] != name:
+        if objective_name is not None and objective["name"] != objective_name:
             continue
         generate_objective_content(spec_data, objective["name"], path_group)
         if verbosity_level != config.V_QUIET:

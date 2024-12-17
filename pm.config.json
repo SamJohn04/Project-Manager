@@ -54,13 +54,13 @@
         {
             "pathGroup": "main",
             "path": "projectmanager/core/%NAME%.py",
-            "content": "# @FEAT %NAME% TODO\ndef %NAME%():\n\t# TODO\n\tpass\n",
+            "content": "# @FEAT %NAME% TODO\ndef %NAME%():\n    # TODO\n    pass\n\n",
             "append": false
         },
         {
             "pathGroup": "test",
             "path": "tests/core/test_%NAME%.py",
-            "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n\t# TODO\n\tpass\n",
+            "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n    # TODO\n    pass\n\n",
             "append": false
         }
     ]
