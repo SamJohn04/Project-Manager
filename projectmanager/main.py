@@ -1,8 +1,10 @@
 from projectmanager import config
 from projectmanager.arg_parse import parse_args
-from projectmanager.core import specification, scan, template
+from projectmanager.core import specification, scan
 from projectmanager.core.generate import generate_objective_content
 from projectmanager.util import io, style
+
+from projectmanager.feature import init
 
 
 def main():
@@ -10,7 +12,7 @@ def main():
 
     match args.command:
         case "init":
-            init(args.title, args.template, args.force, args.verbosity)
+            init.init(args.title, args.template, args.force, args.verbosity)
         case "generate":
             generate(args.objective, args.path_group, args.verbosity)
         case "add":
@@ -38,27 +40,6 @@ def main():
             set_command(args.name, args.value, args.verbosity)
         case "unset":
             set_command(args.name, None, args.verbosity)
-
-
-# @FEAT init DONE
-def init(title: str, template_path: str, force: bool, verbosity_level: int = config.V_NORMAL):
-    if io.read_specification() is not None and not force:
-        io.err("Specification already exists. Use -f | --force to reinitialize and overwrite anyway.")
-        exit(1)
-
-    if template_path is None:
-        spec_data = specification.init_spec(title)
-    else:
-        template_data = io.read_template(template_path)
-        spec_data = template.create_from_template(title, template_data, verbosity_level)
-
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        io.success(f"Specification initialized")
-    if verbosity_level == config.V_VERBOSE:
-        print(style.bold(title), end=": ")
-        io.success("Specification has been initialized successfully.")
 
 
 # @FEAT generate REPURPOSE

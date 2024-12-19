@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from projectmanager.config import PM_SPECIFICATION_FILE_NAME
+from projectmanager.config import PM_SPECIFICATION_FILE_NAME, PLACEHOLDERS
 from projectmanager.util import style
 from projectmanager.validation.specification import validate_spec
 from projectmanager.validation.template import validate_template
@@ -30,18 +30,23 @@ def write_specification(specification: dict):
 
 
 def read_template(template_path: str) -> dict:
-    try:
-        with open(template_path, encoding='utf-8') as file:
-            json_data = json.load(file)
-    except Exception as e:
-        err(f"Something went wrong when parsing the specification file: {e}")
-        exit(1)
+    with open(template_path, encoding='utf-8') as file:
+        template_data = json.load(file)
 
-    if not validate_template(json_data):
-        err("The template is invalid.")
-        exit(1)
+    if not validate_template(template_data):
+        raise Exception("The template is invalid.")
 
-    return json_data
+    return template_data
+
+
+def write_content(content: str, path: Path, to_append: bool = False, **kwargs: str):
+    for placeholder in PLACEHOLDERS:
+        if placeholder in kwargs:
+            content = content.replace(PLACEHOLDERS[placeholder], kwargs[placeholder])
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, 'a' if to_append else 'w', encoding='utf-8') as file:
+        file.write(content)
 
 
 def err(message: str):

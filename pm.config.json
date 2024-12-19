@@ -53,14 +53,14 @@
     "objectivesFormat": [
         {
             "pathGroup": "main",
-            "path": "projectmanager/core/%NAME%.py",
+            "path": "projectmanager/feature/%NAME%.py",
             "content": "# @FEAT %NAME% TODO\ndef %NAME%():\n    # TODO\n    pass\n\n",
             "append": false
         },
         {
             "pathGroup": "test",
-            "path": "tests/core/test_%NAME%.py",
-            "content": "# @FEAT %NAME% TODO\ndef test_%NAME%(): \n    # TODO\n    pass\n\n",
+            "path": "tests/feature/test_%NAME%.py",
+            "content": "# @FEAT %NAME% TODO\ndef test_%NAME%():\n    # TODO\n    pass\n\n",
             "append": false
         }
     ]
