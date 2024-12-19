@@ -2,9 +2,9 @@ from projectmanager import config
 from projectmanager.arg_parse import parse_args
 from projectmanager.core import specification, scan
 from projectmanager.core.generate import generate_objective_content
+from projectmanager.feature.add_item import add_item
+from projectmanager.feature.init import init
 from projectmanager.util import io, style
-
-from projectmanager.feature import init
 
 
 def main():
@@ -12,15 +12,9 @@ def main():
 
     match args.command:
         case "init":
-            init.init(args)
-        case "generate":
-            generate(args.objective, args.path_group, args.verbosity)
+            init(args)
         case "add":
-            assert args.item in ("objective", "path")
-            if args.item == "objective":
-                add_objective(args.name, args.description, args.verbosity)
-            else:
-                add_path_group(args.name, args.dir, args.verbosity)
+            add_item(args)
         case "view":
             if args.item is None or args.item == "all":
                 view_all(args.verbosity)
@@ -36,6 +30,8 @@ def main():
             remove(args.item, args.name, args.verbosity)
         case "status" | "scan":
             scan_command(args.verbosity)
+        case "generate":
+            generate(args.objective, args.path_group, args.verbosity)
         case "set":
             set_command(args.name, args.value, args.verbosity)
         case "unset":
@@ -52,53 +48,6 @@ def generate(objective_name: str | None, path_group: str | None, verbosity_level
         generate_objective_content(spec_data, objective["name"], path_group)
         if verbosity_level != config.V_QUIET:
             io.success(f"Code of objective {objective['name']} has been generated successfully.")
-
-
-# @FEAT add_objective DONE
-def add_objective(name: str, description: str | None, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    if description is None:
-        description = ""
-    try:
-        specification.add_objective(spec_data, name, description)
-    except ValueError as e:
-        if verbosity_level == config.V_QUIET:
-            io.err("add failed")
-        else:
-            io.err(f"Adding Objective failed: {e}")
-        exit(1)
-
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        io.success("Objective added")
-    elif verbosity_level == config.V_VERBOSE:
-        io.success(f"Objective {name} has been added successfully.")
-
-
-# @FEAT add_path_group DONE
-def add_path_group(name: str, dir_path: str, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    extensions = [extension.strip() for extension in input("Extensions (separated by \", \"): ").split(",")]
-
-    if verbosity_level == config.V_VERBOSE:
-        print("Extensions", *extensions, sep="\n\t")
-
-    try:
-        specification.add_path_group(spec_data, name, dir_path, extensions)
-    except ValueError as e:
-        if verbosity_level == config.V_QUIET:
-            io.err("add failed")
-        else:
-            io.err(f"Adding Path Group failed: {e}")
-        exit(1)
-
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        io.success("Path group added")
-    elif verbosity_level == config.V_VERBOSE:
-        io.success(f"Path Group {name} has been added successfully.")
 
 
 # @FEAT view_all DONE
