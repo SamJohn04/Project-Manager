@@ -1,3 +1,4 @@
+from argparse import Namespace
 from collections import namedtuple
 import pathlib
 from projectmanager import config
@@ -8,23 +9,23 @@ ItemsToCreate = namedtuple("ItemsToCreate", ["dirs", "files"])
 
 
 # @FEAT init REVIEW
-def init(title: str, template_path: str, force: bool, verbosity_level: int = config.V_NORMAL):
-    if io.specification_exists() and not force:
+def init(args: Namespace):
+    if io.specification_exists() and not args.force:
         io.err("Specification file already exists. Use -f | --force to reinitialize and overwrite anyway.")
         exit(1)
 
-    if template_path is None:
-        spec_data = specification.init_spec(title)
+    if args.template is None:
+        spec_data = specification.init_spec(args.title)
     else:
-        template_data = io.read_template(template_path)
-        spec_data = template.create_from_template(title, template_data, verbosity_level)
+        template_data = io.read_template(args.template)
+        spec_data = template.create_from_template(args.title, template_data, args.verbosity)
 
     io.write_specification(spec_data)
 
-    if verbosity_level == config.V_NORMAL:
+    if args.verbosity == config.V_NORMAL:
         io.success(f"Specification initialized")
-    elif verbosity_level == config.V_VERBOSE:
-        io.success(f"{title}: specification has been initialized successfully.")
+    elif args.verbosity == config.V_VERBOSE:
+        io.success(f"{args.title}: specification has been initialized successfully.")
 
 
 def from_template(title: str, template_data: dict, verbosity_level: int = config.V_NORMAL) -> dict:
