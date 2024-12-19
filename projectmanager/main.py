@@ -12,7 +12,7 @@ def main():
 
     match args.command:
         case "init":
-            init.init(args.title, args.template, args.force, args.verbosity)
+            init.init(args)
         case "generate":
             generate(args.objective, args.path_group, args.verbosity)
         case "add":
