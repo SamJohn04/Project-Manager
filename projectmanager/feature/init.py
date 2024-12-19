@@ -12,7 +12,7 @@ ItemsToCreate = namedtuple("ItemsToCreate", ["dirs", "files"])
 def init(args: Namespace):
     if io.specification_exists() and not args.force:
         io.err("Specification file already exists. Use -f | --force to reinitialize and overwrite anyway.")
-        exit(1)
+        return
 
     if args.template is None:
         spec_data = specification.init_spec(args.title)
