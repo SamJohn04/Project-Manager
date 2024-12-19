@@ -54,7 +54,7 @@ def add_add_subparser(subparsers):
             help="Add an objective or a path group to the specification",
             description="Add a new objective or path group to the project specification."
             )
-    add_subparsers = add_parser.add_subparsers(dest="item")
+    add_subparsers = add_parser.add_subparsers(dest="item", required=True)
 
     add_objective_parser = add_subparsers.add_parser(
             "objective",
@@ -62,7 +62,7 @@ def add_add_subparser(subparsers):
             description="Add a new objective to the project specification."
             )
     add_objective_parser.add_argument("name", help="Name of the objective")
-    add_objective_parser.add_argument("-d", "--description", help="Description of the objective")
+    add_objective_parser.add_argument("-d", "--description", help="Description of the objective", default="")
 
     add_path_group_parser = add_subparsers.add_parser(
             "path",
