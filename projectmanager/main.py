@@ -4,6 +4,7 @@ from projectmanager.core import specification, scan
 from projectmanager.core.generate import generate_objective_content
 from projectmanager.feature.add_item import add_item
 from projectmanager.feature.init import init
+from projectmanager.feature.view import view
 from projectmanager.util import io, style
 
 
@@ -16,16 +17,7 @@ def main():
         case "add":
             add_item(args)
         case "view":
-            if args.item is None or args.item == "all":
-                view_all(args.verbosity)
-            elif args.item == "objectives":
-                view_objectives(args.verbosity)
-            elif args.item == "paths":
-                view_path_groups(args.verbosity)
-            elif args.item == "objective":
-                view_objective(args.name, args.verbosity)
-            elif args.item == "path":
-                view_path_group(args.name, args.verbosity)
+            view(args)
         case "rm":
             remove(args.item, args.name, args.verbosity)
         case "status" | "scan":
@@ -48,97 +40,6 @@ def generate(objective_name: str | None, path_group: str | None, verbosity_level
         generate_objective_content(spec_data, objective["name"], path_group)
         if verbosity_level != config.V_QUIET:
             io.success(f"Code of objective {objective['name']} has been generated successfully.")
-
-
-# @FEAT view_all DONE
-def view_all(verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-
-    print(style.blue_text(style.bold(spec_data["title"])))
-
-    if verbosity_level == config.V_QUIET:
-        print(style.blue_text("Objectives"), end=": ")
-        print(', '.join(objective["name"] for objective in spec_data.get("objectives", [])))
-        print(style.blue_text("Path Groups"), end=": ")
-        print(', '.join(path_group["name"] for path_group in spec_data.get("pathGroups", [])))
-    else:
-        print(style.blue_text("Objectives"))
-        for objective in spec_data.get("objectives", []):
-            print('|--', specification.objective_to_str(objective))
-        print()
-        print(style.blue_text("Path Groups"))
-        for path_group in spec_data.get("pathGroups", []):
-            print('|--', specification.path_group_to_str(path_group))
-
-    if verbosity_level == config.V_VERBOSE and "options" in spec_data:
-        print()
-        print(style.blue_text("Options"))
-        for option_name in spec_data["options"]:
-            print(f"|-- {option_name}: {spec_data['options'][option_name]}")
-
-
-# @FEAT view_objectives DONE
-def view_objectives(verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-
-    if verbosity_level == config.V_QUIET:
-        print(style.blue_text("Objectives"), end=": ")
-        print(', '.join(objective["name"] for objective in spec_data.get("objectives", [])))
-    elif verbosity_level == config.V_NORMAL:
-        for objective in spec_data.get("objectives", []):
-            print(specification.objective_to_str(objective))
-    else:
-        print(style.blue_text("Objectives"))
-        for objective in spec_data.get("objectives", []):
-            print('|--', specification.objective_to_str(objective))
-
-
-# @FEAT view_path_groups DONE
-def view_path_groups(verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-
-    if verbosity_level == config.V_QUIET:
-        print(style.blue_text("Path Groups"), end=": ")
-        print(', '.join(path_group["name"] for path_group in spec_data.get("pathGroups", [])))
-    elif verbosity_level == config.V_NORMAL:
-        for path_group in spec_data.get("pathGroups", []):
-            print(specification.path_group_to_str(path_group))
-    else:
-        print(style.blue_text("Path Groups"))
-        for path_group in spec_data.get("pathGroups", []):
-            print('|--', specification.path_group_to_str(path_group))
-
-
-# @FEAT view_objective DONE
-def view_objective(name: str, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    for objective in spec_data.get("objectives", []):
-        if objective["name"] != name:
-            continue
-        if verbosity_level == config.V_QUIET:
-            print(name)
-        else:
-            print(specification.objective_to_str(objective))
-        break
-    else:  # Executes if break was never called, i.e., name not found
-        if verbosity_level != config.V_QUIET:
-            io.warn("Objective not found.")
-
-
-# @FEAT view_path_group DONE
-def view_path_group(name: str, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    for path_group in spec_data.get("pathGroups", []):
-        if path_group["name"] == name:
-            continue
-        if verbosity_level == config.V_QUIET:
-            print(name)
-        else:
-            print(specification.path_group_to_str(path_group))
-        break
-    else:
-        if verbosity_level != config.V_QUIET:
-            io.warn("Path Group not found.")
 
 
 # @FEAT remove DONE
