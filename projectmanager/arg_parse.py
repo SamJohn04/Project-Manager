@@ -97,17 +97,6 @@ def add_view_subparser(subparsers):
             description="View all path groups in the project specification."
             )
 
-    view_subparsers.add_parser(
-            "objective",
-            help="View an objective by name",
-            description="View an objective in the project specification by name."
-            ).add_argument("name", help="Name of the objective to view")
-    view_subparsers.add_parser(
-            "path",
-            help="View a path group by name",
-            description="View a path group in the project specification by name."
-            ).add_argument("name", help="Name of the path group to view")
-
 
 def add_remove_subparser(subparsers):
     rm_parser = subparsers.add_parser(
