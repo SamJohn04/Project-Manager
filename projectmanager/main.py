@@ -32,7 +32,7 @@ def main():
                 view_path_group(args.name, args.verbosity)
         case "rm":
             remove(args.item, args.name, args.verbosity)
-        case "scan":
+        case "status":
             scan_command(args.verbosity)
         case "set":
             set_command(args.name, args.value, args.verbosity)

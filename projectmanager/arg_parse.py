@@ -19,7 +19,7 @@ def parse_args():
     add_add_subparser(subparsers)
     add_view_subparser(subparsers)
     add_remove_subparser(subparsers)
-    add_scan_subparser(subparsers)
+    add_status_subparser(subparsers)
     add_set_subparser(subparsers)
     add_unset_subparser(subparsers)
 
@@ -119,9 +119,9 @@ def add_remove_subparser(subparsers):
     rm_parser.add_argument("name", help="Name of the item to be removed")
 
 
-def add_scan_subparser(subparsers):
+def add_status_subparser(subparsers):
     subparsers.add_parser(
-            "scan",
+            "status",
             help="Scan path groups for todos and objective flags",
             description="Scan the files in the path groups for todos and objectives (by flag). Custom flags can be set using the set command."
             )
