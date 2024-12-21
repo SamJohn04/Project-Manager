@@ -4,6 +4,7 @@ from projectmanager.core import specification, scan
 from projectmanager.core.generate import generate_objective_content
 from projectmanager.feature.add_item import add_item
 from projectmanager.feature.init import init
+from projectmanager.feature.remove import remove
 from projectmanager.feature.view import view
 from projectmanager.util import io, style
 
@@ -19,7 +20,7 @@ def main():
         case "view":
             view(args)
         case "rm":
-            remove(args.item, args.name, args.verbosity)
+            remove(args)
         case "status" | "scan":
             scan_command(args.verbosity)
         case "generate":
@@ -40,29 +41,6 @@ def generate(objective_name: str | None, path_group: str | None, verbosity_level
         generate_objective_content(spec_data, objective["name"], path_group)
         if verbosity_level != config.V_QUIET:
             io.success(f"Code of objective {objective['name']} has been generated successfully.")
-
-
-# @FEAT remove DONE
-def remove(item: str, name: str, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    try:
-        if item == "objective":
-            specification.remove_objective(spec_data, name)
-        else:
-            specification.remove_path_group(spec_data, name)
-    except KeyError as e:
-        if verbosity_level == config.V_QUIET:
-            io.err("rm failed")
-        else:
-            io.err(f"Remove {item} failed: {e}")
-        exit(1)
-
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        io.success(f"Removed {item} {name}")
-    elif verbosity_level == config.V_VERBOSE:
-        io.success(f"{item} {name} has been removed successfully.")
 
 
 # @FEAT scan DONE
