@@ -1,6 +1,5 @@
 from projectmanager import config
 from projectmanager.arg_parse import parse_args
-from projectmanager.core import scan
 from projectmanager.core.generate import generate_objective_content
 from projectmanager.feature.add_item import add_item
 from projectmanager.feature.init import init
@@ -8,7 +7,7 @@ from projectmanager.feature.remove import remove
 from projectmanager.feature.set_options import set_options
 from projectmanager.feature.status import status
 from projectmanager.feature.view import view
-from projectmanager.util import io, style
+from projectmanager.util import io
 
 
 def main():
