@@ -122,6 +122,7 @@ def add_remove_subparser(subparsers):
 def add_status_subparser(subparsers):
     subparsers.add_parser(
             "status",
+            aliases=["scan"],
             help="Scan path groups for todos and objective flags",
             description="Scan the files in the path groups for todos and objectives (by flag). Custom flags can be set using the set command."
             )
