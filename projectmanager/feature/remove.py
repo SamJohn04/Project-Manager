@@ -18,7 +18,7 @@ def remove(args: Namespace):
             io.err("rm failed")
         else:
             io.err(f"Removing {args.item} failed: {e}")
-        exit(1)
+        return
 
     io.write_specification(spec_data)
 
