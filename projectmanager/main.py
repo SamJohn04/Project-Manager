@@ -1,6 +1,6 @@
 from projectmanager import config
 from projectmanager.arg_parse import parse_args
-from projectmanager.core import specification, scan
+from projectmanager.core import scan
 from projectmanager.core.generate import generate_objective_content
 from projectmanager.feature.add_item import add_item
 from projectmanager.feature.init import init
