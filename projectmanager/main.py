@@ -5,6 +5,7 @@ from projectmanager.core.generate import generate_objective_content
 from projectmanager.feature.add_item import add_item
 from projectmanager.feature.init import init
 from projectmanager.feature.remove import remove
+from projectmanager.feature.set_options import set_options
 from projectmanager.feature.view import view
 from projectmanager.util import io, style
 
@@ -25,10 +26,8 @@ def main():
             scan_command(args.verbosity)
         case "generate":
             generate(args.objective, args.path_group, args.verbosity)
-        case "set":
-            set_command(args.name, args.value, args.verbosity)
-        case "unset":
-            set_command(args.name, None, args.verbosity)
+        case "set" | "unset":
+            set_options(args)
 
 
 # @FEAT generate REPURPOSE
@@ -59,26 +58,6 @@ def scan_command(verbosity_level: int = config.V_NORMAL):
         print(f"\nScanning {path_group['name']} for objectives...")
         scan.scan_path_group_for_objectives(path_group, spec_data.get("objectives", []), spec_data.get("options", {}).get("objectiveFlag"), verbosity_level)
         print()
-
-
-# @FEAT set_options DONE
-def set_command(option_name: str, option_val: str | None, verbosity_level: int = config.V_NORMAL):
-    spec_data = get_spec_data()
-    
-    specification.set_option(spec_data, option_name, option_val)
-
-    io.write_specification(spec_data)
-
-    if verbosity_level == config.V_NORMAL:
-        if option_val is None:
-            io.success(f"{option_name} unset")
-        else:
-            io.success(f"{option_name} set")
-    elif verbosity_level == config.V_VERBOSE:
-        if option_val is None:
-            io.success(f"{option_name} has been unset.")
-        else:
-            io.success(f"{option_name} has been set to {option_val}.")
 
 
 def get_spec_data() -> dict:
