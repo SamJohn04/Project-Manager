@@ -34,15 +34,15 @@
             "description": ""
         },
         {
-            "name": "scan",
-            "description": ""
-        },
-        {
             "name": "set_options",
             "description": ""
         },
         {
             "name": "generate",
+            "description": ""
+        },
+        {
+            "name": "status",
             "description": ""
         }
     ],
