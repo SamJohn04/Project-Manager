@@ -1,12 +1,8 @@
 import pathlib
 from projectmanager import config
-from projectmanager.util import io
 
 
 def generate_objective_content(spec_data: dict, objective_name: str, path_group_to_generate_in: str | None = None):
-    if "objectivesFormat" not in spec_data:
-        io.err("Format for objectives has not been added to the specification configuration.")
-        return
     for objective_format_item in spec_data["objectivesFormat"]:
         if path_group_to_generate_in is not None and objective_format_item["pathGroup"] != path_group_to_generate_in:
             continue
