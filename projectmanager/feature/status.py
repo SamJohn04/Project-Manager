@@ -1,4 +1,5 @@
 from argparse import Namespace
+
 from projectmanager import config
 from projectmanager.core import scan
 from projectmanager.util import io, style

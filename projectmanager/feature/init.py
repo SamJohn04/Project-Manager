@@ -1,9 +1,10 @@
+import pathlib
 from argparse import Namespace
 from collections import namedtuple
-import pathlib
+
 from projectmanager import config
-from projectmanager.core import specification, template
 from projectmanager.util import io
+from projectmanager.core import specification, template
 
 ItemsToCreate = namedtuple("ItemsToCreate", ["dirs", "files"])
 

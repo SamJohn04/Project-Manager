@@ -1,8 +1,8 @@
 from argparse import Namespace
 
 from projectmanager import config
-from projectmanager.core import specification
 from projectmanager.util import io
+from projectmanager.core import specification
 
 
 # @FEAT remove REVIEW

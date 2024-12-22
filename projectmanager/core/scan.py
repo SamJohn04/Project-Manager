@@ -1,12 +1,11 @@
 from projectmanager import config
-from projectmanager.config import DEFAULT_OBJECTIVE_FLAG, DEFAULT_TODO_FLAG
 from projectmanager.util import io, paths, style
 
 
 def scan_path_group_for_todos(path_group: dict, flag: str | None = None, verbosity_level: int = config.V_NORMAL):
     todo_found_in_group = False
     if flag is None:
-        flag = DEFAULT_TODO_FLAG
+        flag = config.DEFAULT_TODO_FLAG
 
     for path in paths.from_path_group(path_group):
         with open(path, encoding="utf-8") as file:
@@ -22,7 +21,7 @@ def scan_path_group_for_todos(path_group: dict, flag: str | None = None, verbosi
 
 def scan_path_group_for_objectives(path_group: dict, objectives: list[dict], flag: str | None = None, verbosity_level: int = config.V_NORMAL):
     if flag is None:
-        flag = DEFAULT_OBJECTIVE_FLAG
+        flag = config.DEFAULT_OBJECTIVE_FLAG
 
     objective_flags = {objective["name"]: [] for objective in objectives}
     statuses = {}

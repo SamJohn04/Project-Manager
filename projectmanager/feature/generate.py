@@ -1,7 +1,8 @@
 from argparse import Namespace
+
 from projectmanager import config
-from projectmanager.core.generate import generate_objective_content
 from projectmanager.util import io
+from projectmanager.core.generate import generate_objective_content
 
 
 # @FEAT generate REVIEW

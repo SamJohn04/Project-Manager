@@ -1,21 +1,21 @@
 import json
 from pathlib import Path
 
-from projectmanager.config import PM_SPECIFICATION_FILE_NAME, PLACEHOLDERS
+from projectmanager import config
 from projectmanager.util import style
 from projectmanager.validation.specification import validate_spec
 from projectmanager.validation.template import validate_template
 
 
 def specification_exists() -> bool:
-    return Path(PM_SPECIFICATION_FILE_NAME).is_file()
+    return Path(config.PM_SPECIFICATION_FILE_NAME).is_file()
 
 
 def read_specification() -> dict:
-    if not Path(PM_SPECIFICATION_FILE_NAME).is_file():
+    if not Path(config.PM_SPECIFICATION_FILE_NAME).is_file():
         raise Exception("Specification not found. Please initialize the specification first.")
 
-    with open(PM_SPECIFICATION_FILE_NAME, encoding='utf-8') as file:
+    with open(config.PM_SPECIFICATION_FILE_NAME, encoding='utf-8') as file:
         spec_data = json.load(file)
     
     if not validate_spec(spec_data):
@@ -25,7 +25,7 @@ def read_specification() -> dict:
 
 
 def write_specification(specification: dict):
-    with open(PM_SPECIFICATION_FILE_NAME, 'w', encoding='utf-8') as file:
+    with open(config.PM_SPECIFICATION_FILE_NAME, 'w', encoding='utf-8') as file:
         json.dump(specification, file, indent=4)
 
 
@@ -40,9 +40,9 @@ def read_template(template_path: str) -> dict:
 
 
 def write_content(content: str, path: Path, to_append: bool = False, **kwargs: str):
-    for placeholder in PLACEHOLDERS:
+    for placeholder in config.PLACEHOLDERS:
         if placeholder in kwargs:
-            content = content.replace(PLACEHOLDERS[placeholder], kwargs[placeholder])
+            content = content.replace(config.PLACEHOLDERS[placeholder], kwargs[placeholder])
 
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'a' if to_append else 'w', encoding='utf-8') as file:

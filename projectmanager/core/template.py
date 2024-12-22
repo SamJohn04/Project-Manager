@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from projectmanager import config
-from projectmanager.core import generate, specification
 from projectmanager.util import io
+from projectmanager.core import generate, specification
 
 
 def create_from_template(project_title: str, template_data: dict, verbosity_level: int = config.V_NORMAL) -> dict:
