@@ -75,23 +75,23 @@ To reset them, use:
 manager unset {todoFlag,objectiveFlag}
 ```
 
-### Scan
+### Status
 
-To scan each path group for TODO flags (default TODO) and objective flags (default @OBJECTIVE), use:
+To see the status of your project, i.e., scan each path group for TODO flags (default TODO) and objective flags (default @OBJECTIVE), use:
 
 ```commandline
-manager scan
+manager status
 ```
 
-The scan command will search through all the files in each path group (with any of the specified extensions), and will display all TODO flags and all objective flags in the code.
+The status command will search through all the files in each path group (with any of the specified extensions), and will display all TODO flags and all objective flags in the code.
 The TODO flag can be used to mark incomplete sections. On scanning, the Manager will show all TODO flags in each path group, along with the file path and the line where it is present.
 
-The Objective flag is used for denoting the main section of code relating to a specific objective. The scan will show the status of each objective, as specified along with the flag.
+The Objective flag is used for denoting the main section of code relating to a specific objective. The scan result will show the status of each objective, as specified along with the flag.
 
 ### TODO Flags
 
 TODO flags are flags to denote that some part of the project has been left "TODO".
-The `scan` command searches for the TODO flag across the files, and displays all instances of it.
+The `status` command searches for the TODO flag across the files, and displays all instances of it.
 The flag is expected to be added as a comment.
 
 The default TODO flag is `TODO`
@@ -107,7 +107,7 @@ The flag is expected to be added as a comment.
 @OBJECTIVE init-specification On-Going
 ```
 
-The `scan` command searches for all instances of the Objective flag, and displays the status of each objective for each path group.
+The `status` command searches for all instances of the Objective flag, and displays the status of each objective for each path group.
 Each path group is recommended to only have one Objective flag per objective.
 
 The default Objective flag is `@OBJECTIVE`
@@ -119,6 +119,14 @@ Templates are JSON files having the following information:
 - `name`: The name of the template, for ease of identification
 - `toCreate`: A list of files or directories to create. Contains the `path` and `type` (`file` or `dir`). If `type` is `file`, may contain `content`. All parent directories will be created, if they do not exist.
 - `pathGroups`: A list of path groups to be added to the generated projects. (*optional*)
+
+
+## Generate
+
+Code can be generated for objectives, by path group, using the `generate` command. To use the command, `objectivesFormat` should be added to the config JSON. The command opens the file and either writes (overwrites) or appends the content. `objectivesFormat` is a list of objects, containing the items `pathGroup`, `path`, `content`, and `append`. All these properties are expected; `append` is expected to be a boolean, and the others strings. If `append` is true, appends the content to the end of the file, else overwrites it.
+
+The `content` and `path` will both have placeholders (of title and objective name) replaced by relevent values.
+
 
 ## Future Enhancements
 
