@@ -4,6 +4,10 @@ from projectmanager import config
 
 
 def parse_args():
+    return get_parser().parse_args()
+
+
+def get_parser():
     parser = argparse.ArgumentParser(description="A concise project management tool")
     verbosity_group = parser.add_mutually_exclusive_group()
     verbosity_group.add_argument('-v', '--verbose', action='store_const', const=config.V_VERBOSE, dest="verbosity",
@@ -23,7 +27,7 @@ def parse_args():
     add_set_subparser(subparsers)
     add_unset_subparser(subparsers)
 
-    return parser.parse_args()
+    return parser
 
 
 def add_init_subparser(subparsers):
