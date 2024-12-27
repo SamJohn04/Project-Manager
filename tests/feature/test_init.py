@@ -6,6 +6,7 @@ import tempfile
 from projectmanager import arg_parse
 from projectmanager.feature import init
 from projectmanager import config
+from projectmanager.util import io
 
 
 # @FEAT init REVIEW
@@ -18,12 +19,8 @@ def test_init():
         init.init(parser.parse_args(['init', 'title']))
 
         spec_file_path = pathlib.Path(config.PM_SPECIFICATION_FILE_NAME)
-        assert spec_file_path.is_file()
         
-        with open(spec_file_path, encoding='utf-8') as spec_file:
-            json_data = json.load(spec_file)
-
-        assert json_data == {'title': 'title'}
+        assert io.read_specification() == {'title': 'title'}
 
     template_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'templates', 'pytemplate.json')
 
